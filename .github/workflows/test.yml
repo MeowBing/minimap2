@@ -1,0 +1,92 @@
+# This is a basic workflow that is manually triggered
+
+name: Pipeline for nanopore DNA sequencing
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+
+  
+    # Inputs the workflow accepts.
+    inputs:
+    
+      SCRIPT_PATH:
+        description: 'Path for the bash script'
+        # Default value if no value is explicitly provided
+        default: '/share/home/grp-sunhao/sunxinhong/code'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+
+      INPUT_PATH:
+        description: 'Inputpath for the files'
+        # Default value if no value is explicitly provided
+        default: '/data/home/grp-sunhao/sunxinhong/reference/fastq_runid_1a0e566bce87f9e0a18765d94505a5f43b500471_0.fastq'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+
+      OUTPUT_PATH:
+        description: 'Outputpath for the files'
+        # Default value if no value is explicitly provided
+        default: '/data/home/grp-sunhao/sunxinhong/reference/output_1.sam'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+
+      JOB_NAME:
+        description: 'Give yor job a name'
+        # Default value if no value is explicitly provided
+        default: 'demo'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+
+
+
+      THREAD_NUM:
+        description: 'Thread number for alignment etc.'
+        # Default value if no value is explicitly provided
+        default: "8"
+        # Input has to be provided for the workflow to run
+        required: false
+        # The data type of the input
+        type: string
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  align:
+  
+    name: Alignment
+    runs-on: sz
+  
+    steps:
+    - name: Submit alignment job
+      uses: appleboy/ssh-action@v1.0.3
+
+      env:
+        SCRIPT_PATH: ${{ inputs.SCRIPT_PATH }}
+        INPUT_PATH: ${{ inputs.INPUT_PATH }}
+        OUTPUT_PATH: ${{ inputs.OUTPUT_PATH }}/mapped
+        JOB_NAME: ${{ inputs.JOB_NAME }}
+        THREAD_NUM: ${{ inputs.THREAD_NUM }}
+      
+      with:
+        host: ${{ secrets.HOST_NGS }}
+        port: ${{ secrets.PORT_NGS }}
+        username: ${{ secrets.SSH_USERNAME_SXH }}
+        key: ${{ secrets.SSH_KEY_SXH }}
+
+        envs: SCRIPT_PATH,INPUT_PATH,OUTPUT_PATH,JOB_NAME,THREAD_NUM
+        
+        script: |
+          cd $SCRIPT_PATH
+          bash minimap2.sh
+          
