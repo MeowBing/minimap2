@@ -10,7 +10,7 @@ RUN apt-get update \
 
 ENV PATH="/app/minimap2:${PATH}"
 
-COPY D:/粥粥熊/港中深/lab/code/runminimap2.sh /app/minimap2
+COPY D:/code/runminimap2.sh /app/minimap2
 CMD ["bash", "/app/minimap2/runminimap2.sh"]
 
 
