@@ -88,5 +88,5 @@ jobs:
         
         script: |
           cd $SCRIPT_PATH
-          bash minimap2.sh
+          bash run.sh
           
