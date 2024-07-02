@@ -3,7 +3,6 @@
 echo "Start running minimap2"
 echo "INPUT_PATH: $INPUT_PATH"
 echo "OUTPUT_PATH: $OUTPUT_PATH"
-mkdir -p $OUTPUT_PATH
 
 # 如果 INPUT_PATH 是一个文件夹，处理其中所有 .fastq 文件
 if [ -d "$INPUT_PATH" ]; then
